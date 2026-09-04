@@ -1,0 +1,118 @@
+---
+const startingBalance = 58.4;
+---
+<div class="try">
+  <div class="try-thread" id="demoThread" aria-live="polite" data-start={startingBalance}>
+    <div class="msg from-bot">
+      Morning. You've got <span class="money">$58.40</span> to play with today. Send me
+      anything you spend.
+    </div>
+  </div>
+
+  <div class="try-form">
+    <label for="demoInput" class="visually-hidden">Your expense</label>
+    <input id="demoInput" type="text" placeholder="12.50 lunch" autocomplete="off" />
+    <button class="btn btn-primary" id="demoSend" type="button">Send</button>
+  </div>
+
+  <div class="err" id="demoErr" role="status"></div>
+
+  <div class="chips">
+    <button class="chip" type="button" data-fill="6.20 coffee">6.20 coffee</button>
+    <button class="chip" type="button" data-fill="83 groceries">83 groceries</button>
+    <button class="chip" type="button" data-fill="45 petrol">45 petrol</button>
+  </div>
+</div>
+
+<script>
+  const thread = document.getElementById('demoThread');
+  const input = document.getElementById('demoInput');
+  const send = document.getElementById('demoSend');
+  const err = document.getElementById('demoErr');
+
+  if (thread && input && send && err) {
+    let left = Number(thread.dataset.start || 58.4);
+
+    const CATS = [
+      { re: /coffee|latte|flat white|cafe|café/i, name: 'Eating out' },
+      { re: /lunch|dinner|breakfast|takeaway|uber ?eats|pub|brunch/i, name: 'Eating out' },
+      { re: /grocer|woolies|coles|aldi|iga|shop/i, name: 'Groceries' },
+      { re: /petrol|fuel|servo|parking|train|bus|opal|go ?card/i, name: 'Transport' },
+      { re: /rent|power|electric|water|internet|phone|bill/i, name: 'Bills' },
+      { re: /beer|wine|bar|movie|ticket|gig/i, name: 'Fun' },
+    ];
+
+    const esc = (s) => s.replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c]);
+    const fmt = (n) => '$' + n.toFixed(2);
+
+    function add(html, mine) {
+      const d = document.createElement('div');
+      d.className = 'msg ' + (mine ? 'from-me' : 'from-bot');
+      d.innerHTML = html;
+      thread.appendChild(d);
+      while (thread.children.length > 7) thread.removeChild(thread.firstChild);
+    }
+
+    function submit() {
+      const raw = (input.value || '').trim();
+      if (!raw) {
+        err.textContent = 'Type an amount first, like "12.50 lunch".';
+        return;
+      }
+      const m = raw.match(/-?\d+(\.\d{1,2})?/);
+      if (!m) {
+        err.textContent = 'I couldn\u2019t find an amount in that. Try "12.50 lunch".';
+        return;
+      }
+      const amt = Math.abs(parseFloat(m[0]));
+      if (!isFinite(amt) || amt <= 0) {
+        err.textContent = 'That amount needs to be more than zero.';
+        return;
+      }
+      err.textContent = '';
+
+      const label = raw.replace(m[0], '').replace(/^[^a-z]+/i, '').trim();
+      let cat = 'Everything else';
+      for (const c of CATS) {
+        if (c.re.test(label)) {
+          cat = c.name;
+          break;
+        }
+      }
+      if (cat === 'Everything else' && label) {
+        cat = label.charAt(0).toUpperCase() + label.slice(1);
+      }
+
+      add(esc(raw), true);
+      left = left - amt;
+
+      const reply =
+        left > 0
+          ? 'Logged ' + fmt(amt) + ' to ' + esc(cat) + '. <span class="money">' + fmt(left) + '</span> left for today.'
+          : 'Logged ' + fmt(amt) + ' to ' + esc(cat) + '. That puts you <span class="money over">' +
+            fmt(Math.abs(left)) + '</span> over for today. Tomorrow\u2019s number will be smaller.';
+
+      add(reply, false);
+      input.value = '';
+      input.focus();
+    }
+
+    send.addEventListener('click', submit);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submit();
+      }
+    });
+    input.addEventListener('input', () => {
+      if (err.textContent) err.textContent = '';
+    });
+    document.querySelectorAll('.chip').forEach((c) => {
+      c.addEventListener('click', () => {
+        input.value = c.getAttribute('data-fill');
+        err.textContent = '';
+        submit();
+      });
+    });
+  }
+</script>

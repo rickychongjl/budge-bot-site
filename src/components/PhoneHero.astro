@@ -1,0 +1,48 @@
+---
+const daily = '$58.40';
+const daysLeft = 17;
+const remaining = '$986';
+const afterCoffee = '$52.20';
+---
+<div class="phone" id="phone">
+  <div class="screen">
+    <div class="screen-top">
+      <div class="avatar" aria-hidden="true"></div>
+      <div><b>Budge Bot</b><span>online</span></div>
+    </div>
+    <div class="thread">
+      <div class="msg from-bot allowance reveal d1">
+        <div class="cap">Safe to spend today</div>
+        <span class="fig money">{daily}</span>
+        <div class="sub">{daysLeft} days left in your month · <span class="money">{remaining}</span> to go</div>
+      </div>
+      <div class="msg from-me reveal d2">6.20 coffee</div>
+      <div class="msg from-bot reveal d3">
+        Logged to Eating out. <span class="money">{afterCoffee}</span> left for today.
+        <div class="stamp">7:42 am</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const phone = document.getElementById('phone');
+  if (phone) {
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              phone.classList.add('played');
+              io.disconnect();
+            }
+          });
+        },
+        { threshold: 0.35 }
+      );
+      io.observe(phone);
+    } else {
+      phone.classList.add('played');
+    }
+  }
+</script>

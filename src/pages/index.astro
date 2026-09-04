@@ -1,0 +1,234 @@
+---
+import Base from '../layouts/Base.astro';
+import PhoneHero from '../components/PhoneHero.astro';
+import ChatDemo from '../components/ChatDemo.astro';
+
+const TELEGRAM_URL = 'https://t.me/';
+
+const steps = [
+  {
+    when: 'First',
+    title: 'Set a monthly budget',
+    body: "Tell the bot what you've got to spend this month and roughly where it goes. Takes about two minutes, once.",
+  },
+  {
+    when: 'Then',
+    title: 'Text what you spend',
+    body: '"6.20 coffee". That\u2019s the whole interaction. It sorts the category and does the arithmetic.',
+  },
+  {
+    when: 'Every morning',
+    title: "Get today's number",
+    body: "Your remaining monthly budget divided by the days left, sent to you before you've spent anything.",
+  },
+];
+
+const faqs = [
+  {
+    q: 'Does it connect to my bank?',
+    a: "No. Everything is entered by you in the chat. That's a deliberate choice, and it's why there's no bank login to hand over.",
+  },
+  {
+    q: "How is today's number worked out?",
+    a: 'Your remaining monthly budget divided by the number of days left in the month. Spend less today and tomorrow\u2019s number goes up.',
+  },
+  {
+    q: 'Why Telegram and not WhatsApp?',
+    a: 'Telegram allows bots to start a conversation with you, which is the whole point of a message that arrives unprompted. WhatsApp support is planned but isn\u2019t live yet.',
+  },
+  {
+    q: 'What are Telegram Stars?',
+    a: 'Telegram\u2019s own in-app currency. Premium inside Telegram is paid in Stars rather than by card, which is why the price is shown that way.',
+  },
+  {
+    q: 'Is it finished?',
+    a: "No. It's in preview, which means things will change and some of it will break. Pricing isn't final either.",
+  },
+];
+---
+
+<Base>
+  <div class="hero">
+    <div class="shell hero-grid">
+      <div>
+        <h1>Every morning, one number.</h1>
+        <p class="lede">
+          Budge Bot texts you what's safe to spend today, before you spend it. Log a coffee
+          in five seconds by replying. No app to open, no dashboard to check.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href={TELEGRAM_URL}>Start on Telegram</a>
+          <button class="btn btn-quiet" type="button" disabled aria-disabled="true">
+            WhatsApp <span class="soon">Coming soon</span>
+          </button>
+        </div>
+        <p class="cta-note">Free to use. Currently in preview.</p>
+      </div>
+      <PhoneHero />
+    </div>
+  </div>
+
+  <section class="sunk" id="try">
+    <div class="shell">
+      <div class="sec-head">
+        <h2>Try it here first.</h2>
+        <p>Type an expense the way you'd text it. Amount first, then what it was.</p>
+      </div>
+      <ChatDemo />
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="shell">
+      <div class="sec-head">
+        <h2>How it works</h2>
+        <p>Three things happen, in order. Then it repeats every morning.</p>
+      </div>
+      <div class="steps">
+        {steps.map((s) => (
+          <div class="step">
+            <div class="n">{s.when}</div>
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sunk">
+    <div class="shell">
+      <div class="sec-head">
+        <h2>Most budgeting apps wait for you to come back.</h2>
+        <p>That's the part that fails. Not the tracking, the remembering.</p>
+      </div>
+      <div class="vs">
+        <div class="vs-card them">
+          <h3>An app you open</h3>
+          <ul>
+            <li>You have to remember it exists</li>
+            <li>Charts tell you what already happened</li>
+            <li>Logging a $4 coffee costs six taps</li>
+            <li>You stop opening it by week three</li>
+          </ul>
+        </div>
+        <div class="vs-card">
+          <h3>A bot that texts you</h3>
+          <ul>
+            <li>It starts the conversation, not you</li>
+            <li>One number, before you spend it</li>
+            <li>Logging is a reply in a chat you're already in</li>
+            <li>Nothing new to install or open</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="shell">
+      <div class="sec-head">
+        <h2>Pricing</h2>
+        <p>
+          Free covers most people. Premium is for heavier use and lives on two different
+          payment rails, depending on where you chat.
+        </p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Free</h3>
+          <div class="price money">$0</div>
+          <span class="rail rail-aud">No payment needed</span>
+          <ul>
+            <li>Daily allowance message</li>
+            <li>Monthly budget and categories</li>
+            <li>Fair-use message limit</li>
+          </ul>
+          <a class="btn btn-primary" href={TELEGRAM_URL}>Start on Telegram</a>
+        </div>
+
+        <div class="plan feature">
+          <h3>Telegram Premium</h3>
+          <div class="price money">150 Stars</div>
+          <span class="rail rail-stars">Paid in Telegram Stars · about A$3.50/mo</span>
+          <ul>
+            <li>Everything in Free</li>
+            <li>Higher message limits</li>
+            <li>Custom categories and reminders</li>
+          </ul>
+          <a class="btn btn-primary" href={TELEGRAM_URL}>Upgrade in Telegram</a>
+        </div>
+
+        <div class="plan dim">
+          <h3>WhatsApp Premium <span class="soon">Coming soon</span></h3>
+          <div class="price" style="font-size:1.15rem;color:var(--ink-faint);font-weight:400">
+            Pricing not set yet
+          </div>
+          <span class="rail rail-aud">Will be billed in AUD by card</span>
+          <ul>
+            <li>Same features, on WhatsApp</li>
+            <li>Not yet available</li>
+          </ul>
+          <button class="btn btn-quiet" type="button" disabled aria-disabled="true">
+            Not available yet
+          </button>
+        </div>
+      </div>
+      <p class="fine">
+        Telegram Premium is charged in Telegram Stars through Telegram, so the dollar figure
+        shown is an approximate conversion and may vary. WhatsApp Premium will be charged in
+        Australian dollars by card when it launches. Prices are indicative during preview and
+        not yet final.
+      </p>
+    </div>
+  </section>
+
+  <section class="sunk">
+    <div class="shell">
+      <div class="sec-head"><h2>What it does with your data</h2></div>
+      <div class="trust">
+        <div>
+          <h3>No bank connection</h3>
+          <p>Budge Bot never touches your bank. There's nothing to link, because you tell it what you spent.</p>
+        </div>
+        <div>
+          <h3>Amounts and labels only</h3>
+          <p>What's stored is the number you sent and the word next to it, so it can add them up for the month.</p>
+        </div>
+        <div>
+          <h3>Delete it whenever</h3>
+          <p>Send "delete my data" and it's gone, along with the budget and history behind it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="shell">
+      <div class="sec-head"><h2>Questions</h2></div>
+      <div style="margin-top:1.5rem;max-width:44rem">
+        {faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sunk">
+    <div class="shell" style="text-align:left;max-width:44rem">
+      <h2>Find out what today's number is.</h2>
+      <p style="color:var(--ink-soft);margin-top:.85rem">
+        Set a budget in two minutes and get your first message tomorrow morning.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href={TELEGRAM_URL}>Start on Telegram</a>
+        <button class="btn btn-quiet" type="button" disabled aria-disabled="true">
+          WhatsApp <span class="soon">Coming soon</span>
+        </button>
+      </div>
+    </div>
+  </section>
+</Base>
