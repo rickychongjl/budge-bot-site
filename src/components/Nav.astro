@@ -4,17 +4,56 @@
   <div class="shell bar-in">
     <a class="wordmark" href="/">
       <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-        <rect x="1.5" y="3.5" width="29" height="21" rx="5" fill="none" stroke="#17242E" stroke-width="2.4"/>
-        <path d="M9 24.5 L9 30 L15.5 24.5 Z" fill="#17242E"/>
-        <path d="M10 14.6 L14 18.4 L22.5 10.2" fill="none" stroke="#B87514" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect class="m-body" x="1.5" y="3.5" width="29" height="21" rx="5" fill="none" stroke-width="2.4"/>
+        <path class="m-tail" d="M9 24.5 L9 30 L15.5 24.5 Z"/>
+        <path class="m-check" d="M10 14.6 L14 18.4 L22.5 10.2" fill="none" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       Budge Bot
     </a>
-    <nav aria-label="Sections">
-      <a href="/#try">Try it</a>
-      <a href="/#how">How it works</a>
-      <a href="/#pricing">Pricing</a>
-      <a href="/#faq">Questions</a>
-    </nav>
+    <div class="bar-right">
+      <nav aria-label="Sections">
+        <a href="/#try">Try it</a>
+        <a href="/#how">How it works</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/#faq">Questions</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8Z"/>
+        </svg>
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2"/>
+          <path d="M12 2.2v2.2M12 19.6v2.2M4.2 12H2M22 12h-2.2M5.6 5.6 4.1 4.1M19.9 19.9l-1.5-1.5M18.4 5.6l1.5-1.5M4.1 19.9l1.5-1.5"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </header>
+
+<script>
+  const btn = document.getElementById('themeToggle');
+  if (btn) {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const root = document.documentElement;
+    const current = () => root.getAttribute('data-theme') || (mq.matches ? 'dark' : 'light');
+    const relabel = () => {
+      const next = current() === 'dark' ? 'light' : 'dark';
+      btn.setAttribute('aria-label', 'Switch to ' + next + ' theme');
+      btn.setAttribute('title', 'Switch to ' + next + ' theme');
+    };
+
+    relabel();
+
+    btn.addEventListener('click', () => {
+      const next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('bb-theme', next);
+      } catch (e) {}
+      relabel();
+    });
+
+    // Follow the system if the visitor has never chosen explicitly.
+    mq.addEventListener('change', relabel);
+  }
+</script>
